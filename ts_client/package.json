@@ -1,0 +1,7 @@
+{
+  "name": "flask_socketio_task_runner_client",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true
+}
