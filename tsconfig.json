@@ -1,0 +1,11 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": "ts_client/src",
+    "outDir": "ts_client/lib",
+    "module": "ES2015"
+  },
+  "exclude": [
+    "ts_client/lib"
+  ]
+}

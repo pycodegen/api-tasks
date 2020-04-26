@@ -9,12 +9,12 @@ import engineio
 import socketio
 from dataclasses import dataclass, field
 
-from task_definitions.TaskDefinitions import TaskDefinition, long_running_task, TaskCall
+from task_definitions.TaskDefinitions import TaskDefinitionsGroup, long_running_task, TaskCall
 
 
 @dataclass
 class SocketIOTaskRunner:
-    task_definitions: TaskDefinition
+    task_definitions: TaskDefinitionsGroup
     # asgi_app: engineio.ASGIApp = engineio.ASGIApp()
     sio: socketio.AsyncServer = field(default_factory=lambda: socketio.AsyncServer(async_mode='asgi'))
     pool: ThreadPoolExecutor = field(default_factory=lambda: ThreadPoolExecutor(max_workers=5))

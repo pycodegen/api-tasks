@@ -18,7 +18,7 @@ class Task:
 
 
 @dataclass
-class TaskDefinition:
+class TaskDefinitionsGroup:
     tasks: Dict[str, Task] = field(default_factory=dict)
 
     def add_task(self, task_func: Callable):
@@ -39,7 +39,7 @@ class TaskDefinition:
         task.func(*task_call.args, **task_call.kwargs)
 
 
-task_definition = TaskDefinition()
+task_definition = TaskDefinitionsGroup()
 
 
 @task_definition.add_task

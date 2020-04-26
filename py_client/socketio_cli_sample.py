@@ -1,5 +1,4 @@
 import asyncio
-import json
 from dataclasses import asdict
 
 import socketio
@@ -18,9 +17,11 @@ async def on_done(data):
 def connect():
     print("I'm connected!")
 
+
 @sio.event
 def connect_error():
     print("The connection failed!")
+
 
 @sio.event
 def disconnect():
