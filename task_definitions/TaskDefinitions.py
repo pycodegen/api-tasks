@@ -1,7 +1,10 @@
+import abc
+from abc import ABC
 from datetime import datetime
 from time import sleep
-from typing import Callable, Dict, List
-from dataclasses import dataclass, field, asdict
+from typing import Callable, Dict, List, Awaitable, Any
+from dataclasses import dataclass, field
+import pathlib
 
 
 @dataclass
@@ -9,6 +12,15 @@ class TaskCall:
     func_name: str
     args: List = field(default_factory=list)
     kwargs: Dict = field(default_factory=dict)
+
+
+class BaseRemoteFile(metaclass=abc.ABCMeta):
+    def __init__(self, file_name: str):
+        self.file_name = file_name
+
+    @abc.abstractmethod
+    def recv(self) -> Awaitable[pathlib.Path]:
+        pass
 
 
 # might add options?
