@@ -1,29 +1,42 @@
+import abc
 from typing import (
     TypeVar, Generic,
 )
 
 ProgressType = TypeVar('ProgressType')
 
-# abstract
+
+# example
+
+class RemoteFile:
+    param_name: str
+
+
 class TaskContext(
     Generic[
-        ProgressType,
-    ],
+        ProgressType
+    ]
 ):
     def send_progress(self, progress_val: ProgressType):
         pass
 
-    def recv_file(self, ):
+    # @abc.abstractmethod
+    async def recv_file(
+            self,
+            remote_file: RemoteFile,
+    ):
+        remote_file.param_name
+        pass
 
 
-
-
-# example
-
-async def some_task(task_context: TaskContext[int], remote_file: RemoteFile):
-    f = await remote_file.recv(task_context)
+async def some_task(
+        task_context: TaskContext[int],
+        remote_file_a: RemoteFile,  # remote_file_a.name = 'remote_file_a' given automatically
+):
+    f = await task_context.recv_file(remote_file_a)
+    # f = await remote_file_a.recv(task_context)
 
 
 # executor
 
-some_task(socketio_task_context)
+# some_task(socketio_task_context)

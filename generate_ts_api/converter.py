@@ -41,10 +41,10 @@ class TypescriptTaskConverter(BasePythonToTypescriptConverter):
         self.task_definitions = task_definitions
         self.extractor = TypeExtractor()
 
-        for key, task in self.task_definitions.tasks.items():
+        for key, func in self.task_definitions.tasks.items():
             self.extractor.add({
                 MarkTsTaskFunction(has_stream=False),
-            })(task.func)
+            })(func)
 
     def get_task_definitions(self):
         task_funcs = {
