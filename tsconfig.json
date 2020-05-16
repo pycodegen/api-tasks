@@ -1,11 +1,20 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "target": "ES5",
     "rootDir": "ts_client/src",
     "outDir": "ts_client/lib",
-    "module": "ES2015"
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "jsx": "react",
+    "lib": [
+      "ES2015",
+      "DOM"
+    ]
   },
   "exclude": [
-    "ts_client/lib"
+    "ts_client/lib",
+    "venv/**/*.ts"
   ]
 }

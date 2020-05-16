@@ -6,7 +6,10 @@ export type TaskArgs<
   argsDict: ArgsDict
 }
 
-export abstract class BaseAPIClient {
+export abstract class BaseRPCClient {
+  extractFileParams(argsDict: { [key: string]: any }) {
+
+  }
   send(args: TaskArgs<any>) {
 
   }

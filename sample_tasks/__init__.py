@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from time import sleep
 
 from task_definitions.TaskContext import TaskContext, RemoteFile
+from task_definitions.TaskDefinitions import TaskDefinitionsGroup
 
 
 def sleep_task(
@@ -32,3 +33,9 @@ async def some_task_with_file(
         file1: RemoteFile,
 ):
     f = await task_context.recv_file(file1)
+
+
+task_definitions = TaskDefinitionsGroup()
+task_definitions.add_task(sleep_task)
+task_definitions.add_task(some_complicated_task)
+task_definitions.add_task(some_task_with_file)

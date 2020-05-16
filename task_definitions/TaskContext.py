@@ -3,13 +3,9 @@ from typing import (
     TypeVar, Generic,
 )
 
+from task_definitions.RemoteFile import RemoteFile
+
 ProgressType = TypeVar('ProgressType')
-
-
-# example
-
-class RemoteFile:
-    param_name: str
 
 
 class TaskContext(

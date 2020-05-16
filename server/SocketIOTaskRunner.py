@@ -1,41 +1,39 @@
 import asyncio
-import datetime
 from asyncio.events import AbstractEventLoop
 from concurrent.futures.thread import ThreadPoolExecutor
 from time import sleep
-from typing import Optional
+from typing import Optional, Type, Dict
 
-import engineio
 import socketio
 from dataclasses import dataclass, field
 
-from task_definitions.TaskDefinitions import TaskDefinitionsGroup, long_running_task, TaskCall
+from server.RemoteFileReceiver.SocketIOFileReceiver import SocketIOFileReceiver
+from task_definitions.RemoteFile import RemoteFileTypeVar
+from task_definitions.TaskContext import RemoteFile
+from task_definitions.TaskDefinitions import TaskDefinitionsGroup, TaskCall
 
 
 @dataclass
 class SocketIOTaskRunner:
     task_definitions: TaskDefinitionsGroup
-    # asgi_app: engineio.ASGIApp = engineio.ASGIApp()
     sio: socketio.AsyncServer = field(default_factory=lambda: socketio.AsyncServer(async_mode='asgi'))
     pool: ThreadPoolExecutor = field(default_factory=lambda: ThreadPoolExecutor(max_workers=5))
     loop: AbstractEventLoop = field(default_factory=lambda: asyncio.get_event_loop())
 
     def __post_init__(self):
         self.app = socketio.ASGIApp(self.sio)
+        self.client_socks: Dict[str, ] = dict()
+        self.file_receiver = SocketIOFileReceiver(sio=self.sio)
         self.sio.on('rpc_call')(self.handle_rpc_call)
 
-    async def on_taskrun(self, time: int, val: int):
-        future = self.loop.run_in_executor(
-            self.pool,
-            lambda: long_running_task(
-                time=time,
-                val=val,
-            ),
+    def create_remote_file(
+            self,
+            param_key: str,
+            # param_value: Type[RemoteFileTypeVar], # TODO: other RemoteFile type possible?
+    ):
+        return RemoteFile(
+            param_name=param_key,
         )
-        # just await + send response here ?
-        value = await future
-        print('done:', time, value)
-        return value
 
     async def handle_rpc_call(self, sid, data):
         print('inside handle_rpc_call', data)
@@ -52,12 +50,4 @@ class SocketIOTaskRunner:
         )
         val = await future
         self.sio.emit('rpc_done', val)
-
-    # def start(self):
-
-        # socketio = SocketIO(self.flask)
-        # @socketio.on('rpc_call')
-        # def call_task(message):
-        #     print(message)
-        # socketio.run(self.flask)
 

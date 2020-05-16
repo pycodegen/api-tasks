@@ -3,13 +3,13 @@ import asyncio
 import uvicorn
 from flask import Flask
 from server.SocketIOTaskRunner import SocketIOTaskRunner
-from task_definitions.TaskDefinitions import task_definition
+from sample_tasks import task_definitions
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 
 socketioTaskRunner = SocketIOTaskRunner(
-    task_definitions=task_definition,
+    task_definitions=task_definitions,
 )
 
 
