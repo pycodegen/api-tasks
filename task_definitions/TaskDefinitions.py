@@ -1,14 +1,10 @@
 from typing import Callable, Dict, List, Awaitable, Any, cast, Union
 from dataclasses import dataclass, field
-import pathlib
 
-from py_codegen.type_extractor.nodes.ClassFound import ClassFound
-from py_codegen.type_extractor.nodes.FixedGenericFound import FixedGenericFound
 from py_codegen.type_extractor.nodes.FunctionFound import FunctionFound
 from py_codegen.type_extractor.type_extractor import TypeExtractor
 
-from task_definitions.TaskContext import RemoteFile, TaskContext
-from task_definitions.errors.MissingTaskContextException import MissingTaskContextException
+from task_definitions.RemoteFile import RemoteFile
 
 
 @dataclass
@@ -31,11 +27,9 @@ class TaskDefinitionsGroup:
 
     def __post_init__(self):
         self.type_extractor = TypeExtractor()
-        self.type_extractor.add()(TaskContext)
         self.type_extractor.add()(RemoteFile)
 
     def add_task(self, task_func: Callable):
-        self.validate_task_func(task_func)
         remote_file_params = self.get_remote_file_params(task_func)
         task_def = TaskDefinition(
             func=task_func,
@@ -48,20 +42,6 @@ class TaskDefinitionsGroup:
             return result
 
         return __wrapper_func__
-
-    def validate_task_func(self, task_func: Callable):
-        self.type_extractor.add()(task_func)
-        task_func_type = cast(FunctionFound, self.type_extractor.collected_types.get(task_func.__qualname__))
-        task_context_classnode = cast(ClassFound, self.type_extractor.collected_types.get('TaskContext'))
-        task_context_param = cast(
-            Union[FixedGenericFound, ClassFound],
-            task_func_type.params.get('task_context')
-        )
-        if getattr(task_context_param, 'origin', None) is not task_context_classnode \
-                and task_context_param is not task_context_classnode:
-            # FIXME: check inside task_context_param.base_classes
-            print(1)
-            raise MissingTaskContextException(task_func)
 
     def run_task(
             self,

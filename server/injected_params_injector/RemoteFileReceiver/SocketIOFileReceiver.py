@@ -1,25 +1,15 @@
 from asyncio import Future
 from typing import (
     Dict,
-    NewType, Literal, List,
-)
-from typing_extensions import (
-    TypedDict,
+    List,
 )
 
 import socketio
 
-
-WaitingFileMeta = TypedDict('WaitingFileMeta', {
-    'sha256': str,
-    'chunkSize': int,
-    'chunk_sha256_checksums': List[str],
-})
-
-WaitingFileInfo = TypedDict('WaitingFileInfo', {
-    'meta': WaitingFileMeta,
-    'future': Future,
-})
+from server.injected_params_injector.RemoteFileReceiver.base import (
+    WaitingFileInfo,
+    WaitingFileMeta,
+)
 
 
 class SocketIOFileReceiver:

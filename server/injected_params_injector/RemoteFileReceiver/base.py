@@ -1,14 +1,11 @@
+import abc
 from asyncio import Future
 from typing import (
     Dict,
-    NewType, Literal, List,
-)
-from typing_extensions import (
+    List,
+    TypeVar, Generic,
     TypedDict,
 )
-
-import socketio
-
 
 WaitingFileMeta = TypedDict('WaitingFileMeta', {
     'sha256': str,
@@ -19,21 +16,30 @@ WaitingFileMeta = TypedDict('WaitingFileMeta', {
 WaitingFileInfo = TypedDict('WaitingFileInfo', {
     'meta': WaitingFileMeta,
     'future': Future,
+    'chunks_received': Dict[int, any] # nth --> Chunk
 })
 
 
-class BaseFileReceiver:
+FileChunk = TypedDict('FileChunk', {
+    'nthChunk': int,
+})
+
+TClientSocket = TypeVar('TClientSocket')
+
+
+class BaseFileReceiver(Generic[TClientSocket], metaclass=abc.ABCMeta):
     waiting_file_infos: Dict[str, WaitingFileInfo]
 
-    def handle_fileupload(self, sid, data: bytes):
-        task_id_separator = data.find(b'[->task_id]\n')
-        task_id = data[:task_id_separator]
-        arg_name_separator = data.find(b'[->arg_name]\n', task_id_separator)
-        arg_name = data[task_id_separator + 1:arg_name_separator]
-        bin_data = data[arg_name_separator + 1:]
+    def verify_file_chunk(
+            self,
+            file_chunk: FileChunk,
+    ):
+        pass
 
-        # format: assume `{task_id}*{bin_data}
-        print(data)
+
+    @abc.abstractmethod
+    def handle_fileupload(self, client_socket: TClientSocket, data: bytes):
+        pass
 
     def __init__(
             self,

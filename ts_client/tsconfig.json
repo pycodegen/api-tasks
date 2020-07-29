@@ -3,8 +3,8 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "target": "ES5",
-    "rootDir": "ts_client/src",
-    "outDir": "ts_client/lib",
+    "rootDir": "src",
+    "outDir": "lib",
     "moduleResolution": "Node",
     "module": "CommonJS",
     "jsx": "react",
@@ -14,7 +14,7 @@
     ]
   },
   "exclude": [
-    "ts_client/lib",
-    "venv/**/*.ts"
+    "lib",
+    "../venv/**/*.ts"
   ]
 }

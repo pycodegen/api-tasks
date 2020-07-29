@@ -1,17 +1,24 @@
+import abc
 from typing import TypeVar
 
+from task_definitions.injected_params.BaseInjectedParam import BaseInjectedParam
 
-class RemoteFile:
+
+class ReceivedFile:
+    pass
+
+
+class RemoteFile(BaseInjectedParam, metaclass=abc.ABCMeta):
     def __init__(
             self,
             param_name: str,
             task_id: str,
-            file_receiver:
-
+            # TODO: file-type, file-name, etc.
     ):
         self.param_name = param_name
+        self.task_id = task_id
 
-    async def recv(self, store_path: str):
+    async def recv(self, store_path: str) -> ReceivedFile:
         pass
 
 
